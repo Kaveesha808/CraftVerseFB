@@ -43,13 +43,3 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python standalone_job.py
-
-      - name: Save Generated Reel as Downloadable Backup (Artifact)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-craft-reel-${{ github.run_id }}
-          path: |
-            backend/media/reels/*.mp4
-            backend/media/thumbnails/*.jpg
-          retention-days: 90
