@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CraftReel AI Agent — 5-Minute Crafts FB Reels Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- HLS.js for live stream playback -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <!-- Top Glass Navigation Bar -->
+    <header class="top-nav">
+        <div class="logo-area">
+            <div class="logo-icon">🎬</div>
+            <div>
+                <h1>CraftReel <span>AI AGENT</span></h1>
+                <p class="subtitle">Autonomous 9:16 FB Reels Generator & Uploader</p>
+            </div>
+        </div>
+
+        <div class="nav-controls">
+            <div class="agent-badge" id="agentBadge">
+                <span class="status-dot"></span>
+                <span id="agentStatusText">Agent: STANDBY</span>
+            </div>
+
+            <button class="btn btn-primary" id="btnGenerateNow">
+                <span>⚡</span> Capture & Create Reel Now
+            </button>
+
+            <button class="btn btn-outline" id="btnToggleAgent">
+                <span>🤖</span> Toggle Auto Agent
+            </button>
+
+            <button class="btn btn-icon" id="btnOpenSettings" title="Settings">
+                ⚙️ Settings
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Dashboard -->
+    <main class="dashboard-grid">
+        <!-- Column 1: Live Stream Monitor & Capture Controls -->
+        <section class="card stream-card">
+            <div class="card-header">
+                <h2>📺 Live 5-Minute Crafts Feed</h2>
+                <span class="live-tag">● LIVE HLS</span>
+            </div>
+            
+            <div class="video-container">
+                <video id="hlsPlayer" autoplay muted controls playsinline></video>
+                <div class="stream-overlay">
+                    <span>Soul 5-Min Crafts ENG • Rakuten</span>
+                </div>
+            </div>
+
+            <div class="stream-config">
+                <div class="form-group">
+                    <label for="clipDuration">Reel Duration (Seconds)</label>
+                    <select id="clipDuration" class="form-input">
+                        <option value="30">30 Seconds (Ultra Fast Hook)</option>
+                        <option value="45" selected>45 Seconds (Recommended Viral Length)</option>
+                        <option value="60">60 Seconds (Full Hack Tutorial)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="headerText">9:16 Top Header Banner Text</label>
+                    <input type="text" id="headerText" class="form-input" value="🔥 CRAZY 5-MIN DIY HACK 💡" placeholder="Enter text for vertical banner">
+                </div>
+
+                <div class="config-footer">
+                    <button class="btn btn-secondary full-width" id="btnApplyHeader">
+                        Apply & Save Configuration
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Column 2: AI Agent Pipeline Monitor & Log -->
+        <section class="card pipeline-card">
+            <div class="card-header">
+                <h2>⚡ AI Agent Pipeline</h2>
+                <span class="status-badge" id="jobStatusBadge">Idle</span>
+            </div>
+
+            <!-- 4-Step Pipeline Visualizer -->
+            <div class="pipeline-steps">
+                <div class="step-item" id="step1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Live Stream Capture</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item" id="step2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">9:16 Supiri Edit</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item" id="step3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">AI Captions & Tags</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item" id="step4">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">FB Page Upload</div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-wrapper">
+                <div class="progress-info">
+                    <span id="currentStepName">Ready for next capture</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Agent Console Log -->
+            <div class="terminal-log" id="terminalLog">
+                <div class="log-line system">[System] CraftReel AI Agent initialized.</div>
+                <div class="log-line info">[Stream] Connected to Rakuten 5-Min Crafts HLS playlist.</div>
+                <div class="log-line info">[Ready] Click 'Capture & Create Reel Now' or enable Autonomous Agent.</div>
+            </div>
+        </section>
+
+        <!-- Column 3: 9:16 Mobile Phone Mockup & Reels Studio -->
+        <section class="card studio-card">
+            <div class="card-header">
+                <h2>📱 9:16 Reels Studio Preview</h2>
+                <span class="reel-id-tag" id="currentReelId">No Reel Selected</span>
+            </div>
+
+            <div class="studio-body">
+                <!-- Phone Frame -->
+                <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <video id="reelVideoPlayer" controls playsinline></video>
+                    <div class="phone-placeholder" id="phonePlaceholder">
+                        <div class="placeholder-icon">📱</div>
+                        <p>Generate or select a Reel from the queue below to preview 9:16 Vertical Edit</p>
+                    </div>
+                </div>
+
+                <!-- Editable AI Captions & FB Publish Controls (100% English) -->
+                <div class="caption-editor">
+                    <div class="form-group">
+                        <label>🇬🇧 Viral Reel Caption (100% English)</label>
+                        <textarea id="editCaptionEn" class="form-input textarea" rows="3" placeholder="AI generated English caption..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🏷️ #Hashtags</label>
+                        <textarea id="editHashtags" class="form-input textarea" rows="2" placeholder="#5MinuteCrafts #DIY #LifeHacks..."></textarea>
+                    </div>
+
+                    <div class="studio-actions">
+                        <button class="btn btn-success full-width" id="btnPublishFB">
+                            🚀 Publish to Facebook Page Now
+                        </button>
+                        <div class="button-row">
+                            <button class="btn btn-outline" id="btnSaveCaption">💾 Save Caption Edits</button>
+                            <button class="btn btn-danger" id="btnDeleteReel">🗑️ Delete Reel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Section: Reels Queue & History -->
+    <section class="queue-section">
+        <div class="queue-header">
+            <h3>🎬 Generated Reels Queue & History</h3>
+            <button class="btn btn-small" id="btnRefreshQueue">🔄 Refresh List</button>
+        </div>
+        <div class="reels-grid" id="reelsGrid">
+            <!-- Dynamically populated reel cards -->
+        </div>
+    </section>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop" id="settingsModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>⚙️ Facebook Page & AI Agent Settings</h2>
+                <button class="modal-close" id="btnCloseSettings">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="fb-guide-box" style="background: rgba(24, 119, 242, 0.15); border: 1px solid rgba(24, 119, 242, 0.4); padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; margin-bottom: 0.5rem;">
+                    <strong>📘 How to connect your Facebook Page:</strong><br>
+                    1. Go to <a href="https://developers.facebook.com/" target="_blank" style="color: #60a5fa;">Facebook Developers Portal</a> &rarr; Create App (Business).<br>
+                    2. Enable <strong>Graph API / Pages API</strong> permissions (pages_manage_posts, pages_read_engagement).<br>
+                    3. Generate a long-lived <strong>Page Access Token</strong> and paste it below along with your Page ID!
+                </div>
+
+                <div class="form-group">
+                    <label for="setStreamUrl">5-Minute Crafts HLS Stream URL</label>
+                    <input type="text" id="setStreamUrl" class="form-input" value="https://soul-5mincrafteng-rakuten.amagi.tv/playlist.m3u8">
+                </div>
+
+                <div class="form-group">
+                    <label for="setPageId">Facebook Page ID</label>
+                    <input type="text" id="setPageId" class="form-input" placeholder="e.g. 104829103849102">
+                </div>
+
+                <div class="form-group">
+                    <label for="setAccessToken">Facebook Page Access Token (Graph API v19.0+)</label>
+                    <input type="password" id="setAccessToken" class="form-input" placeholder="EAA...">
+                </div>
+
+                <div class="form-group">
+                    <label for="setGroqKey">⚡ Groq API Key (Llama 3.3 70B AI Engine)</label>
+                    <input type="password" id="setGroqKey" class="form-input" placeholder="gsk_...">
+                </div>
+
+                <div class="form-group">
+                    <label for="setGeminiKey">Google Gemini API Key (Optional Fallback)</label>
+                    <input type="password" id="setGeminiKey" class="form-input" placeholder="AIzaSy...">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="setAutoUpload">Auto-Upload Mode</label>
+                        <select id="setAutoUpload" class="form-input">
+                            <option value="false">OFF (Review in Studio first)</option>
+                            <option value="true">ON (Zero-click immediate FB upload)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="setDailyTarget">Daily Target Videos</label>
+                        <select id="setDailyTarget" class="form-input">
+                            <option value="3" selected>3 Videos / Day (Recommended)</option>
+                            <option value="5">5 Videos / Day</option>
+                            <option value="10">10 Videos / Day</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="setAgentInterval">Autonomous Agent Interval</label>
+                    <select id="setAgentInterval" class="form-input">
+                        <option value="30">Every 30 Minutes</option>
+                        <option value="60">Every 60 Minutes (1 Hour)</option>
+                        <option value="180">Every 3 Hours</option>
+                    </select>
+                </div>
+
+                <div id="testFbResult" class="test-fb-result"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="btnTestFb">🧪 Test Facebook Token</button>
+                <button class="btn btn-primary" id="btnSaveSettings">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

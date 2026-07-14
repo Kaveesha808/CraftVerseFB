@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: craftreel-ai-agent
+    env: docker
+    plan: free
+    healthCheckPath: /api/status
+    envVars:
+      - key: STREAM_URL
+        value: https://soul-5mincrafteng-rakuten.amagi.tv/playlist.m3u8
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile

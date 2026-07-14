@@ -1,0 +1,23 @@
+# Python cache & runtime
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Database & local media storage
+*.db
+backend/craftreel.db
+backend/media/
+media/
+*.mp4
+*.jpg
+*.png
+*.ts
+*.m3u8
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
