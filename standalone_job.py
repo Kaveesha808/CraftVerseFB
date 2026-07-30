@@ -11,6 +11,7 @@ import video_editor as editor
 import ai_caption_agent as ai_agent
 import fb_uploader as fb
 import content_detector as detector
+import download_music
 
 def run_single_auto_reel_job():
     """
@@ -20,6 +21,10 @@ def run_single_auto_reel_job():
     print("=" * 60)
     print(f"🚀 Starting Standalone Auto Reel Job at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
+    
+    print("\n[Step 0] Generating Viral Background Music...")
+    download_music.generate_viral_beats()
+
 
     stream_url = os.environ.get("STREAM_URL", "https://soul-5mincrafteng-rakuten.amagi.tv/playlist.m3u8")
     clip_duration = int(os.environ.get("CLIP_DURATION", "45"))
