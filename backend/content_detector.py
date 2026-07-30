@@ -88,7 +88,8 @@ def is_valid_craft_clip(video_path: str, thumbnail_path: str = "", gemini_api_ke
                 return False, f"Bumper / Break slate detected at {slice_sec}s (WILL BE BACK SHORTLY or solid screen, variance={yvar_val:.1f})"
             
             # If dominant blue channel (`UAVG >> VAVG + 15` or high blue chroma) with moderate/low variance, it's Rakuten's blue break slate
-            if uavg_val is not None and vavg_val is not None and (uavg_val - vavg_val) > 18.0 and (yvar_val is None or yvar_val < 1100.0):
+            # Increased yvar_val threshold to 4000.0 to catch animated gradients with text!
+            if uavg_val is not None and vavg_val is not None and (uavg_val - vavg_val) > 18.0 and (yvar_val is None or yvar_val < 4000.0):
                 return False, f"Blue Bumper slate detected at {slice_sec}s (WILL BE BACK SHORTLY blue screen)"
         except Exception:
             pass
@@ -114,7 +115,8 @@ def is_valid_craft_clip(video_path: str, thumbnail_path: str = "", gemini_api_ke
                     if max(stddev) < 36.0:
                         return False, f"Bumper / Break slate detected at {st}s (WILL BE BACK SHORTLY solid color screen)"
                     # Check for dominant blue slate (Blue mean >> Red/Green mean)
-                    if mean_rgb[2] > (mean_rgb[0] + 25) and mean_rgb[2] > (mean_rgb[1] + 25) and max(stddev) < 55.0:
+                    # Increased stddev threshold to 110.0 to account for text and animated gradients!
+                    if mean_rgb[2] > (mean_rgb[0] + 30) and mean_rgb[2] > (mean_rgb[1] + 30) and max(stddev) < 110.0:
                         return False, f"Blue Bumper slate detected at {st}s (WILL BE BACK SHORTLY blue background)"
                 except Exception:
                     if os.path.exists(temp_img):
@@ -135,7 +137,7 @@ def is_valid_craft_clip(video_path: str, thumbnail_path: str = "", gemini_api_ke
             mean_rgb = stat.mean
             if max(stddev) < 36.0:
                 return False, "Bumper / Break slate detected on thumbnail (WILL BE BACK SHORTLY solid color screen)"
-            if mean_rgb[2] > (mean_rgb[0] + 25) and mean_rgb[2] > (mean_rgb[1] + 25) and max(stddev) < 55.0:
+            if mean_rgb[2] > (mean_rgb[0] + 30) and mean_rgb[2] > (mean_rgb[1] + 30) and max(stddev) < 110.0:
                 return False, "Blue Bumper slate detected on thumbnail (WILL BE BACK SHORTLY blue background)"
         except Exception:
             pass
