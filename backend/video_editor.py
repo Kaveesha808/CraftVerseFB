@@ -57,9 +57,9 @@ def create_vertical_reel(raw_video_path: str, header_text: str = "🔥 CRAZY 5-M
     # - Overlay FG on BG center. Add 12px yellow border around the 960 width area.
     # - Add Banners and Badges.
     filter_complex = (
-        "[0:v]setpts=PTS/1.20,hflip,split=2[in_bg][in_fg];"
+        "[0:v]setsar=1,setpts=PTS/1.20,hflip,split=2[in_bg][in_fg];"
         "[in_bg]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=40:15,vignette=angle=0.5,eq=brightness=-0.1[bg];"
-        "[in_fg]scale=960:-2,eq=gamma=1.12:contrast=1.15:saturation=1.25,pad=iw+24:ih+24:12:12:yellow[fg_bordered];"
+        "[in_fg]rotate=a=-3*PI/180:ow=iw:oh=ih:c=black@0,scale=960:-2,eq=gamma=1.12:contrast=1.15:saturation=1.25,pad=iw+24:ih+24:12:12:yellow[fg_bordered];"
         "[bg][fg_bordered]overlay=(W-w)/2:(H-h)/2,"
         "drawbox=x=0:y=0:w=1080:h=270:color=black@0.85:t=fill,"
         "drawbox=x=0:y=1650:w=1080:h=270:color=black@0.85:t=fill,"
@@ -116,11 +116,11 @@ def create_vertical_reel(raw_video_path: str, header_text: str = "🔥 CRAZY 5-M
         cmd_fb = [
             "ffmpeg", "-y", "-fflags", "+genpts",
             "-i", raw_video_path,
-            "-vf", "setpts=PTS/1.20,hflip,scale=960:-2,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black,"
+            "-vf", "setsar=1,setpts=PTS/1.20,hflip,rotate=a=-3*PI/180:ow=iw:oh=ih:c=black@0,scale=960:-2,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black,"
                    "drawbox=x=0:y=0:w=1080:h=270:color=black@0.85:t=fill,drawbox=x=0:y=1650:w=1080:h=270:color=black@0.85:t=fill,"
                    "drawtext=text='CRAZY 5-MIN DIY HACK':fontcolor=yellow:fontsize=56:x=(w-text_w)/2:y=95:borderw=4:bordercolor=red,"
                    "drawtext=text='WAIT FOR THE END & SHARE':fontcolor=white:fontsize=52:x=(w-text_w)/2:y=1745:borderw=4:bordercolor=black,"
-                   "eq=gamma=1.12:contrast=1.15:saturation=1.25,setsar=1,format=yuv420p",
+                   "eq=gamma=1.12:contrast=1.15:saturation=1.25",
             "-filter:a", "asetrate=44100*1.15,aresample=44100,atempo=1.04,volume=1.05",
             "-c:v", "libx264", "-preset", "veryfast", "-crf", "23",
             "-pix_fmt", "yuv420p",
